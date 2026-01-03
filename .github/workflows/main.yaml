@@ -58,6 +58,9 @@ jobs:
       - name: Install clang
         run: |
           pacman -Syu --noconfirm llvm lld clang
+      - name: Install ccache
+        run: |
+          pacman -Syu --noconfirm ccache
       - name: Install dependencies for htmldocs
         run: |
           pacman -Syu --noconfirm graphviz imagemagick python-sphinx texlive-latexextra
