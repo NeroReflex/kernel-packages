@@ -51,7 +51,16 @@ jobs:
           mkdir -p /etc/gnupg && echo "auto-key-retrieve" >> /etc/gnupg/gpg.conf
       - name: Install dependencies
         run: |
-          pacman -Syu --noconfirm bc cpio pahole python kmod rust llvm lld clang git
+          pacman -Syu --noconfirm base-devel bc cpio pahole python kmod rust rust-bindgen rust-src
+      - name: Install git
+        run: |
+          pacman -Syu --noconfirm git
+      - name: Install clang
+        run: |
+          pacman -Syu --noconfirm llvm lld clang
+      - name: Install dependencies for htmldocs
+        run: |
+          pacman -Syu --noconfirm graphviz imagemagick python-sphinx texlive-latexextra
       - name: Build linux-ogc package
         id: build-arch-kernel-package
         shell: bash
