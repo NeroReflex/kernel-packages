@@ -33,6 +33,9 @@ makedepends=(
   clang
   lld
 
+  # secure boot signing
+  sbsigntools
+
   # htmldocs
   graphviz
   imagemagick
@@ -43,6 +46,8 @@ options=('!strip')
 source=(
   "linux.tar.gz::$url/archive/$_srcrev.tar.gz"
   config  # the main kernel config file
+  db.crt
+  db.key
 )
 
 validpgpkeys=(
@@ -52,8 +57,10 @@ validpgpkeys=(
   C7E7849466FE2358343588377258734B41C31549  # David Runge <dvzrv@archlinux.org>
 )
 b2sums=(
-  'SKIP'
-  'SKIP'
+  'SKIP' # Kernel source code
+  'SKIP' # kernel config file
+  'SKIP' # db.crt
+  'SKIP' # db.key
 )
 
 export KBUILD_BUILD_HOST=archlinux
@@ -104,6 +111,11 @@ pkgver() {
 build() {
   cd "linux"
   _make all
+
+  local modulesdir="$pkgdir/usr/lib/modules/$(<version)"
+
+  echo "Signing kernel for secure boot..."
+  sbsign --key "$srcdir/db.key" --cert "$srcdir/db.crt" --output "$(_make -s image_name)" "$(_make -s image_name)"
 }
 
 _package() {

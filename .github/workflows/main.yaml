@@ -16,10 +16,8 @@ env:
 jobs:
   build-arch-kernel:
     runs-on: ubuntu-24.04
-
     outputs:
       full_version: ${{ steps.build-arch-kernel-package.outputs.full_version }}
-    
     container: 
       image: archlinux:base-devel
       volumes:
@@ -64,6 +62,9 @@ jobs:
       - name: Install dependencies for htmldocs
         run: |
           pacman -Syu --noconfirm graphviz imagemagick python-sphinx texlive-latexextra
+      - name: Install secure boot utilities
+        run: |
+          pacman -Syu --noconfirm sbsigntools
       - name: Build linux-ogc package
         id: build-arch-kernel-package
         shell: bash
